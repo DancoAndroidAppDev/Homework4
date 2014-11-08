@@ -2,7 +2,9 @@ package net.cozz.danco.homework4;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +18,7 @@ import java.util.List;
 
 
 public class MyActivity extends Activity {
+    public static final String TAG = MyActivity.class.getCanonicalName();
 
     private int fontSize = 4;
 
@@ -25,6 +28,7 @@ public class MyActivity extends Activity {
         return fontSize;
     }
 
+    GridView gridView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +44,7 @@ public class MyActivity extends Activity {
         final List<String> capitals =
                 Arrays.asList(getResources().getStringArray(R.array.capitals));
 
-        GridView gridView = (GridView) findViewById(R.id.grid_view);
+        gridView = (GridView) findViewById(R.id.grid_view);
         gridView.setAdapter(adapter);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -78,7 +82,16 @@ public class MyActivity extends Activity {
             fontSize -= 1;
             loadContent();
             return true;
+        } else if (id == R.id.animate) {
+            doAnimation();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public void doAnimation() {
+
+        String str =(String) gridView.getAdapter().getItem(0);
+        Log.i(TAG, str);
     }
 }
