@@ -1,5 +1,8 @@
 package net.cozz.danco.homework4;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -8,9 +11,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Arrays;
@@ -90,8 +96,55 @@ public class MyActivity extends Activity {
 
 
     public void doAnimation() {
+        CellViewAdapter adapter = (CellViewAdapter) gridView.getAdapter();
+        TextView view = new TextView(this);
+        view = (TextView) adapter.getView(0, view, gridView);
+        animate(view);
+        Log.i(TAG, view.getText().toString());
+    }
 
-        String str =(String) gridView.getAdapter().getItem(0);
-        Log.i(TAG, str);
+    public void animate(TextView textView){
+        final int RED = 0xffFF8080;
+        final int BLUE = 0xff8080FF;
+
+        ValueAnimator colorAnim = ObjectAnimator.ofInt(textView, "textColor", RED, BLUE);
+        colorAnim.setDuration(1000);
+        colorAnim.setEvaluator(new ArgbEvaluator());
+        colorAnim.setRepeatCount(ValueAnimator.INFINITE);
+        colorAnim.setRepeatMode(ValueAnimator.REVERSE);
+        colorAnim.start();
+
+    }
+
+    public void fadeInOut(final TextView textView){
+        Animation animFadeIn, animFadeOut;
+
+        animFadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+
+        animFadeIn.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                continueAnim(textView);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        textView.startAnimation(animFadeIn);
+    }
+
+    public void continueAnim(final TextView textView){
+        Animation animFadeOut;
+
+        animFadeOut = AnimationUtils.loadAnimation(this, R.anim.fade_out);
+        textView.startAnimation(animFadeOut);
     }
 }
