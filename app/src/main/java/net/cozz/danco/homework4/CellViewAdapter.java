@@ -59,7 +59,6 @@ public class CellViewAdapter extends BaseAdapter {
             LayoutInflater inflater = LayoutInflater.from(context);
             view = inflater.inflate(R.layout.cell_layout, null);
 
-
             Random r = new Random();
             if (isFirstView) {
                 isFirstView = false;
