@@ -95,14 +95,29 @@ public class MyActivity extends Activity {
             loadContent();
             return true;
         } else if (id == R.id.animate) {
+            doAnimate();
+        } else if (id == R.id.animate_all) {
             doAnimation();
         }
         return super.onOptionsItemSelected(item);
     }
 
 
+    public void doAnimate() {
+        int position = rand.nextInt(gridView.getChildCount());
+
+        Log.i(TAG, "animating cell at position: " + position);
+        View view = gridView.getChildAt(position);
+        cellIndecies.add(position);
+
+        TextView textView = (TextView) view.findViewById(R.id.state_cell_row1);
+
+        Log.i(TAG, String.format("animating: %s", textView.getText().toString()));
+        rotate(textView, false);
+    }
+
+
     public void doAnimation() {
-        CellViewAdapter adapter = (CellViewAdapter) gridView.getAdapter();
         TextView textView = null;
         int position = rand.nextInt(gridView.getChildCount());
         while (cellIndecies.contains(position)) {
@@ -120,14 +135,14 @@ public class MyActivity extends Activity {
 //        view = (TextView) findViewById(R.id.state_cell_row1);
 
             Log.i(TAG, String.format("animating: %s", textView.getText().toString()));
-            rotate(textView);
+            rotate(textView, true);
         } else {
             doAnimation();
         }
     }
 
 
-    public void animate(TextView textView){
+    public void animateColor(TextView textView){
         final int RED = 0xffFF8080;
         final int BLUE = 0xff8080FF;
 
@@ -141,19 +156,30 @@ public class MyActivity extends Activity {
     }
 
 
-    public void rotate(final TextView textView){
-        Animation animFadeIn, animFadeOut;
+    public void rotate(final TextView textView, final boolean cycle){
+        Animation animation;
 
-        animFadeIn = AnimationUtils.loadAnimation(this, R.anim.rotate);
+        List<Integer> animations = new ArrayList<Integer>(4);
+        animations.add(R.anim.blinking);
+        animations.add(R.anim.fade_in);
+        animations.add(R.anim.fade_out);
+        animations.add(R.anim.rotate);
+        animations.add(R.anim.color);
 
-        animFadeIn.setAnimationListener(new Animation.AnimationListener() {
+        animation =
+                AnimationUtils.loadAnimation(this, animations.get(rand.nextInt(animations.size())));
+
+        animation.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onAnimationStart(Animation animation) { }
+            public void onAnimationStart(Animation animation) {
+            }
 
             @Override
             public void onAnimationEnd(Animation animation) {
                 Log.i(TAG, "animation ended");
-                doAnimation();
+                if (cycle) {
+                    doAnimation();
+                }
             }
 
             @Override
@@ -163,7 +189,7 @@ public class MyActivity extends Activity {
             }
         });
 
-        textView.startAnimation(animFadeIn);
+        textView.startAnimation(animation);
     }
 
 
