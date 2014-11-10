@@ -17,6 +17,12 @@
         android:showAsAction="never" />
 
     <item android:id="@+id/animate"
+        android:icon="@drawable/ic_action_animate_1"
+        android:title="Settings"
+        android:orderInCategory="100"
+        android:showAsAction="always" />
+
+    <item android:id="@+id/animate_all"
         android:icon="@drawable/ic_action_animate"
         android:title="Settings"
         android:orderInCategory="100"

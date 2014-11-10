@@ -3,10 +3,10 @@
     android:shareInterpolator="false" >
 
     <alpha
+        android:repeatCount="5"
         android:duration="200"
-        android:fromAlpha="1.0"
-        android:toAlpha="0.0"
-        android:repeatCount="3">
-    </alpha>
+        android:fromAlpha="0.0"
+        android:toAlpha="100" >
 
+        </alpha>
 </set>
