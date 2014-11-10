@@ -119,7 +119,7 @@ public class MyActivity extends Activity {
             textView = (TextView) view.findViewById(R.id.state_cell_row1);
 //        view = (TextView) findViewById(R.id.state_cell_row1);
 
-            Log.i(TAG, String.format("animating: ", textView.getText().toString()));
+            Log.i(TAG, String.format("animating: %s", textView.getText().toString()));
             rotate(textView);
         } else {
             doAnimation();
