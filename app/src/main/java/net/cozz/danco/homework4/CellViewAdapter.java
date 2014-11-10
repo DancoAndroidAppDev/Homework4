@@ -108,7 +108,7 @@ public class CellViewAdapter extends BaseAdapter {
 
 
     public int dp2Px(int dp){
-        Log.i(TAG, "dp2Px");
+//        Log.i(TAG, "dp2Px");
 
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);

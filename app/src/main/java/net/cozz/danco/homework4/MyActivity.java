@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -19,8 +20,10 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 
 public class MyActivity extends Activity {
@@ -35,6 +38,9 @@ public class MyActivity extends Activity {
     }
 
     GridView gridView;
+
+    private Random rand = new Random();
+    private final List<Integer> cellIndecies = new ArrayList<Integer>(50);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,11 +103,29 @@ public class MyActivity extends Activity {
 
     public void doAnimation() {
         CellViewAdapter adapter = (CellViewAdapter) gridView.getAdapter();
-        TextView view = new TextView(this);
-        view = (TextView) adapter.getView(0, view, gridView);
-        animate(view);
-        Log.i(TAG, view.getText().toString());
+        TextView textView = null;
+        int position = rand.nextInt(gridView.getChildCount());
+        while (cellIndecies.contains(position)) {
+            position = rand.nextInt(gridView.getChildCount());
+        }
+
+        Log.i(TAG, "animating cell at position: " + position);
+        View view = gridView.getChildAt(position);
+        if (view.isEnabled()) {
+            cellIndecies.add(position);
+            if (cellIndecies.size() == 50) {
+                cellIndecies.clear();
+            }
+            textView = (TextView) view.findViewById(R.id.state_cell_row1);
+//        view = (TextView) findViewById(R.id.state_cell_row1);
+
+            Log.i(TAG, String.format("animating: ", textView.getText().toString()));
+            rotate(textView);
+        } else {
+            doAnimation();
+        }
     }
+
 
     public void animate(TextView textView){
         final int RED = 0xffFF8080;
@@ -116,16 +140,40 @@ public class MyActivity extends Activity {
 
     }
 
+
+    public void rotate(final TextView textView){
+        Animation animFadeIn, animFadeOut;
+
+        animFadeIn = AnimationUtils.loadAnimation(this, R.anim.rotate);
+
+        animFadeIn.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) { }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                Log.i(TAG, "animation ended");
+                doAnimation();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+                textView.clearAnimation();
+                Log.i(TAG, "animation repeating");
+            }
+        });
+
+        textView.startAnimation(animFadeIn);
+    }
+
+
     public void fadeInOut(final TextView textView){
         Animation animFadeIn, animFadeOut;
 
         animFadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
-
         animFadeIn.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
+            public void onAnimationStart(Animation animation) { }
 
             @Override
             public void onAnimationEnd(Animation animation) {
@@ -134,12 +182,14 @@ public class MyActivity extends Activity {
 
             @Override
             public void onAnimationRepeat(Animation animation) {
-
+                doAnimation();
             }
         });
 
         textView.startAnimation(animFadeIn);
     }
+
+
 
     public void continueAnim(final TextView textView){
         Animation animFadeOut;
